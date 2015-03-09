@@ -6,6 +6,7 @@ using Microsoft.Owin.Security.Cookies;
 using Microsoft.Owin.Security.Google;
 using Owin;
 using London.Models;
+using Owin.Security.Providers.GitHub;
 
 namespace London
 {
@@ -34,7 +35,7 @@ namespace London
                         validateInterval: TimeSpan.FromMinutes(30),
                         regenerateIdentity: (manager, user) => user.GenerateUserIdentityAsync(manager))
                 }
-            });            
+            });
             app.UseExternalSignInCookie(DefaultAuthenticationTypes.ExternalCookie);
 
             // Enables the application to temporarily store user information when they are verifying the second factor in the two-factor authentication process.
@@ -63,6 +64,12 @@ namespace London
             //    ClientId = "",
             //    ClientSecret = ""
             //});
+
+            app.UseGitHubAuthentication(new GitHubAuthenticationOptions
+            {
+                ClientId = "dc2119b9f611c6fec9c6",
+                ClientSecret = "d028ee0e40ed333e53efa5dd2aba3e0e56bbfbee"
+            });
         }
     }
 }
