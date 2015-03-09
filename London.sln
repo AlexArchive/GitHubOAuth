@@ -3,9 +3,7 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 2013
 VisualStudioVersion = 12.0.31101.0
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "London.WebModel", "London.WebModel\London.WebModel.csproj", "{29C4606D-5D0D-489C-8FB6-E427D2D16A2E}"
-EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "London.WebUI", "London.WebUI\London.WebUI.csproj", "{897230D6-BE6E-4EE0-B794-45F0C502EAC6}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "London", "London\London.csproj", "{3C57A632-661E-4234-93EB-49144F5D55C0}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -13,14 +11,10 @@ Global
 		Release|Any CPU = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
-		{29C4606D-5D0D-489C-8FB6-E427D2D16A2E}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{29C4606D-5D0D-489C-8FB6-E427D2D16A2E}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{29C4606D-5D0D-489C-8FB6-E427D2D16A2E}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{29C4606D-5D0D-489C-8FB6-E427D2D16A2E}.Release|Any CPU.Build.0 = Release|Any CPU
-		{897230D6-BE6E-4EE0-B794-45F0C502EAC6}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{897230D6-BE6E-4EE0-B794-45F0C502EAC6}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{897230D6-BE6E-4EE0-B794-45F0C502EAC6}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{897230D6-BE6E-4EE0-B794-45F0C502EAC6}.Release|Any CPU.Build.0 = Release|Any CPU
+		{3C57A632-661E-4234-93EB-49144F5D55C0}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{3C57A632-661E-4234-93EB-49144F5D55C0}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{3C57A632-661E-4234-93EB-49144F5D55C0}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{3C57A632-661E-4234-93EB-49144F5D55C0}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

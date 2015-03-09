@@ -1,4 +1,4 @@
-#OS junk files
+#Windows files
 [Tt]humbs.db
 *.DS_Store
 
@@ -19,7 +19,6 @@
 *.[Cc]ache
 *.ilk
 *.log
-*.TMP
 *.lib
 *.sbr
 *.sdf
@@ -32,10 +31,6 @@ obj/
 [Rr]elease*/
 Ankh.NoLoad
 
-#MonoDevelop
-*.pidb
-*.userprefs
-
 #Tooling
 _ReSharper*/
 *.resharper
@@ -45,21 +40,5 @@ _ReSharper*/
 #Project files
 [Bb]uild/
 
-#Subversion files
-.svn
-
-# Office Temp Files
-~$*
-
 #NuGet
 packages/
-
-#ncrunch
-*ncrunch*
-*crunch*.local.xml
-
-# visual studio database projects
-*.dbmdl
-
-#Test files
-*.testsettings
