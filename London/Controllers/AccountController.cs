@@ -25,7 +25,7 @@ namespace London.Controllers
         public ApplicationSignInManager SignInManager
         {
             get { return signInManager ?? HttpContext.GetOwinContext().Get<ApplicationSignInManager>(); }
-            private set  { signInManager = value;  }
+            private set { signInManager = value; }
         }
 
         public ApplicationUserManager UserManager
@@ -41,72 +41,38 @@ namespace London.Controllers
         public ActionResult ExternalLogin(string returnUrl)
         {
             return new ChallengeResult(
-                "GitHub", 
-                Url.Action("ExternalLoginCallback", "Account", 
+                "GitHub",
+                Url.Action("ExternalLoginCallback", "Account",
                 new { ReturnUrl = returnUrl }));
         }
 
         [AllowAnonymous]
         public async Task<ActionResult> ExternalLoginCallback(string returnUrl)
         {
-            ExternalLoginInfo loginInfo = await AuthenticationManager.GetExternalLoginInfoAsync();
+            var info = await AuthenticationManager.GetExternalLoginInfoAsync();
+            var result = await SignInManager.ExternalSignInAsync(info, true);
 
-            if (loginInfo == null)
+            if (result == SignInStatus.Success)
             {
-                return RedirectToAction("Login");
+                return RedirectToLocal(returnUrl);
             }
 
-            // Sign in the user with this external login provider if the user already has a login
-            var result = await SignInManager.ExternalSignInAsync(loginInfo, isPersistent: false);
-
-            switch (result)
+            if (result == SignInStatus.Failure)
             {
-                case SignInStatus.Success:
-                    return RedirectToLocal(returnUrl);
-                case SignInStatus.LockedOut:
-                    return View("Lockout");
-                case SignInStatus.RequiresVerification:
-                    return RedirectToAction("SendCode", new { ReturnUrl = returnUrl, RememberMe = false });
-                case SignInStatus.Failure:
-                default:
-                    return await ExternalLoginConfirmation(loginInfo.Email, returnUrl);
-            }
-        }
-
-        [HttpPost]
-        [AllowAnonymous]
-        [ValidateAntiForgeryToken]
-        public async Task<ActionResult> ExternalLoginConfirmation(string email, string returnUrl)
-        {
-            if (User.Identity.IsAuthenticated)
-            {
-                return RedirectToAction("Index", "Manage");
-            }
-
-            if (ModelState.IsValid)
-            {
-                // Get the information about the user from the external login provider
-                var info = await AuthenticationManager.GetExternalLoginInfoAsync();
-                if (info == null)
+                var user = new ApplicationUser { UserName = info.DefaultUserName, Email = info.Email };
+                var createResult = await UserManager.CreateAsync(user);
+                if (createResult.Succeeded)
                 {
-                    return View("ExternalLoginFailure");
-                }
-                var user = new ApplicationUser { UserName = email, Email = email };
-                var result = await UserManager.CreateAsync(user);
-                if (result.Succeeded)
-                {
-                    result = await UserManager.AddLoginAsync(user.Id, info.Login);
-                    if (result.Succeeded)
+                    createResult = await UserManager.AddLoginAsync(user.Id, info.Login);
+                    if (createResult.Succeeded)
                     {
                         await SignInManager.SignInAsync(user, isPersistent: false, rememberBrowser: false);
                         return RedirectToLocal(returnUrl);
                     }
                 }
-                AddErrors(result);
             }
 
-            ViewBag.ReturnUrl = returnUrl;
-            throw new NotImplementedException();
+            throw new NotImplementedException("This should not happen.");
         }
 
         [HttpPost]
@@ -141,14 +107,6 @@ namespace London.Controllers
             }
 
             base.Dispose(disposing);
-        }
-
-        private void AddErrors(IdentityResult result)
-        {
-            foreach (var error in result.Errors)
-            {
-                ModelState.AddModelError("", error);
-            }
         }
 
         private ActionResult RedirectToLocal(string returnUrl)
