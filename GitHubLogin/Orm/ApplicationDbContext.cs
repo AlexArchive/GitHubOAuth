@@ -1,7 +1,6 @@
-﻿using London.Orm.Models;
-using Microsoft.AspNet.Identity.EntityFramework;
+﻿using Microsoft.AspNet.Identity.EntityFramework;
 
-namespace London.Orm
+namespace GitHubLogin.Orm
 {
     public class ApplicationDbContext : IdentityDbContext<ApplicationUser>
     {

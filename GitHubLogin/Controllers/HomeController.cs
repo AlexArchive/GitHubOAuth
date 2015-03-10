@@ -1,6 +1,6 @@
 ﻿using System.Web.Mvc;
 
-namespace London.Controllers
+namespace GitHubLogin.Controllers
 {
     public class HomeController : Controller
     {

@@ -1,12 +1,11 @@
 using System;
-using London.Orm;
-using London.Orm.Models;
+using GitHubLogin.Orm;
 using Microsoft.AspNet.Identity;
 using Microsoft.AspNet.Identity.EntityFramework;
 using Microsoft.AspNet.Identity.Owin;
 using Microsoft.Owin;
 
-namespace London.Identity
+namespace GitHubLogin.Identity
 {
     public class ApplicationUserManager : UserManager<ApplicationUser>
     {

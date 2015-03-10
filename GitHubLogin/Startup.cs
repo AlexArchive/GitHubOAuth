@@ -1,8 +1,7 @@
 ﻿using System;
-using London.Identity;
-using London.Models;
-using London.Orm;
-using London.Orm.Models;
+using GitHubLogin;
+using GitHubLogin.Identity;
+using GitHubLogin.Orm;
 using Microsoft.AspNet.Identity;
 using Microsoft.AspNet.Identity.Owin;
 using Microsoft.Owin;
@@ -10,8 +9,8 @@ using Microsoft.Owin.Security.Cookies;
 using Owin;
 using Owin.Security.Providers.GitHub;
 
-[assembly: OwinStartupAttribute(typeof(London.Startup))]
-namespace London
+[assembly: OwinStartup(typeof(Startup))]
+namespace GitHubLogin
 {
     public partial class Startup
     {

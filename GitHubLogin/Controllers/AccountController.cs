@@ -2,13 +2,12 @@
 using System.Threading.Tasks;
 using System.Web;
 using System.Web.Mvc;
-using London.Identity;
-using London.Orm.Models;
-using Microsoft.AspNet.Identity;
+using GitHubLogin.Identity;
+using GitHubLogin.Orm;
 using Microsoft.AspNet.Identity.Owin;
 using Microsoft.Owin.Security;
 
-namespace London.Controllers
+namespace GitHubLogin.Controllers
 {
     [Authorize]
     public class AccountController : Controller

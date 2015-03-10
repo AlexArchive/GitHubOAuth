@@ -3,7 +3,7 @@ using System.Threading.Tasks;
 using Microsoft.AspNet.Identity;
 using Microsoft.AspNet.Identity.EntityFramework;
 
-namespace London.Orm.Models
+namespace GitHubLogin.Orm
 {
     public class ApplicationUser : IdentityUser
     {

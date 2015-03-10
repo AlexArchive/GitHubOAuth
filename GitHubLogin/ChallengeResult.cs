@@ -2,7 +2,7 @@
 using System.Web.Mvc;
 using Microsoft.Owin.Security;
 
-namespace London
+namespace GitHubLogin
 {
     public class ChallengeResult : HttpUnauthorizedResult
     {

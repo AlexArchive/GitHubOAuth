@@ -2,7 +2,7 @@
 using System.Web.Mvc;
 using System.Web.Routing;
 
-namespace London
+namespace GitHubLogin
 {
     public class MvcApplication : HttpApplication
     {
