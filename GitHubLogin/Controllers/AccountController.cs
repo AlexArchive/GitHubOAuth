@@ -1,118 +1,92 @@
-﻿using System;
-using System.Threading.Tasks;
-using System.Web;
+﻿using System.Web;
 using System.Web.Mvc;
-using GitHubLogin.Identity;
 using GitHubLogin.Orm;
+using Microsoft.AspNet.Identity;
+using Microsoft.AspNet.Identity.EntityFramework;
 using Microsoft.AspNet.Identity.Owin;
 using Microsoft.Owin.Security;
 
 namespace GitHubLogin.Controllers
 {
-    [Authorize]
+    public class ChallengeResult : HttpUnauthorizedResult
+    {
+        public string RedirectUri { get; set; }
+
+        public ChallengeResult(string redirectUri)
+        {
+            RedirectUri = redirectUri;
+        }
+
+        public override void ExecuteResult(ControllerContext context)
+        {
+            var properties = new AuthenticationProperties {RedirectUri = RedirectUri};
+            context.HttpContext
+                .GetOwinContext()
+                .Authentication
+                .Challenge(properties, "GitHub");
+        }
+    }
+
     public class AccountController : Controller
     {
-        #region Data
-        private ApplicationSignInManager signInManager;
-        private ApplicationUserManager userManager;
-
-        private IAuthenticationManager AuthenticationManager
-        {
-            get { return HttpContext.GetOwinContext().Authentication; }
-        }
-
-        public ApplicationSignInManager SignInManager
-        {
-            get { return signInManager ?? HttpContext.GetOwinContext().Get<ApplicationSignInManager>(); }
-            private set { signInManager = value; }
-        }
-
-        public ApplicationUserManager UserManager
-        {
-            get { return userManager ?? HttpContext.GetOwinContext().GetUserManager<ApplicationUserManager>(); }
-            private set { userManager = value; }
-        }
-        #endregion
-
         [HttpPost]
-        [AllowAnonymous]
         [ValidateAntiForgeryToken]
-        public ActionResult ExternalLogin(string returnUrl)
+        public ActionResult Login()
         {
-            return new ChallengeResult(
-                "GitHub",
-                Url.Action("ExternalLoginCallback", "Account", new { ReturnUrl = returnUrl }));
+            var redirectUri = Url.Action(
+                "ExternalLoginCallback",
+                "Account");
+            return new ChallengeResult(redirectUri);
         }
 
-        [AllowAnonymous]
-        public async Task<ActionResult> ExternalLoginCallback(string returnUrl)
+        public ActionResult ExternalLoginCallback()
         {
-            var info = await AuthenticationManager.GetExternalLoginInfoAsync();
-            var result = await SignInManager.ExternalSignInAsync(info, true);
-
-            if (result == SignInStatus.Success)
+            var context = new ApplicationContext();
+            var userStore = new UserStore<IdentityUser>(context);
+            var userManager = new UserManager<IdentityUser>(userStore);
+            var authentication = HttpContext.GetOwinContext().Authentication;
+            var signInManager = new SignInManager<IdentityUser, string>(userManager, authentication);
+            var account = authentication.GetExternalLoginInfo();
+            var status = signInManager.ExternalSignIn(account, false);
+            switch (status)
             {
-                return RedirectToLocal(returnUrl);
-            }
-
-            if (result == SignInStatus.Failure)
-            {
-                var user = new ApplicationUser { UserName = info.DefaultUserName, Email = info.Email };
-                var createResult = await UserManager.CreateAsync(user);
-                if (createResult.Succeeded)
+                case SignInStatus.Success:
                 {
-                    createResult = await UserManager.AddLoginAsync(user.Id, info.Login);
-                    if (createResult.Succeeded)
+                    return RedirectToAction("Index", "Home");
+                }
+                case SignInStatus.Failure:
+                {
+                    var user = new IdentityUser
                     {
-                        await SignInManager.SignInAsync(user, isPersistent: false, rememberBrowser: false);
-                        return RedirectToLocal(returnUrl);
+                        UserName = account.DefaultUserName,
+                        Email = account.Email
+                    };
+                    var operation = userManager.Create(user);
+                    if (operation.Succeeded)
+                    {
+                        operation = userManager.AddLogin(user.Id, account.Login);
+
+                        if (operation.Succeeded)
+                        {
+                            signInManager.SignIn(
+                                user: user,
+                                isPersistent: false,
+                                rememberBrowser: false);
+                            return RedirectToAction("Index", "Home");
+                        }
                     }
                 }
+                    break;
             }
-
-            throw new NotImplementedException("This should not happen.");
+            throw new HttpException(500, "This should not be happening.");
         }
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult LogOff()
+        public ActionResult Logout()
         {
-            AuthenticationManager.SignOut();
-            return RedirectToAction("Index", "Home");
-        }
-
-        [AllowAnonymous]
-        public ActionResult ExternalLoginFailure()
-        {
-            return View();
-        }
-
-        protected override void Dispose(bool disposing)
-        {
-            if (disposing)
-            {
-                if (userManager != null)
-                {
-                    userManager.Dispose();
-                    userManager = null;
-                }
-
-                if (signInManager != null)
-                {
-                    signInManager.Dispose();
-                    signInManager = null;
-                }
-            }
-
-            base.Dispose(disposing);
-        }
-
-        private ActionResult RedirectToLocal(string returnUrl)
-        {
-            if (Url.IsLocalUrl(returnUrl))
-            {
-                return Redirect(returnUrl);
-            }
+            var authentication = HttpContext.GetOwinContext().Authentication;
+            authentication.SignOut();
             return RedirectToAction("Index", "Home");
         }
     }
