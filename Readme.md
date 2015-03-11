@@ -1,3 +1,3 @@
-#IdentityDemo
+#Identity.Samples
 
-Nothing to see here. Just some simple projects that use Identity for future reference.
+This repository is a general space for me to experiment with ASP.NET Identity.

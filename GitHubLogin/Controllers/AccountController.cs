@@ -41,8 +41,7 @@ namespace GitHubLogin.Controllers
         {
             return new ChallengeResult(
                 "GitHub",
-                Url.Action("ExternalLoginCallback", "Account",
-                new { ReturnUrl = returnUrl }));
+                Url.Action("ExternalLoginCallback", "Account", new { ReturnUrl = returnUrl }));
         }
 
         [AllowAnonymous]
