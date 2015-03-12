@@ -1,0 +1,42 @@
+﻿@using Microsoft.AspNet.Identity
+@{
+    Layout = null;
+}
+
+<!DOCTYPE html>
+
+<html>
+<head>
+    <meta name="viewport" content="width=device-width" />
+    <title></title>
+</head>
+<body>
+    <div>
+
+        @if (User.Identity.IsAuthenticated)
+        {
+            <p>Welcome @User.Identity.GetUserName()</p>
+            <img src="@ViewBag.AvatarUrl" />
+            using (Html.BeginForm("Logout", "Account"))
+            {
+                @Html.AntiForgeryToken()
+                <button type="submit">
+                    Logout
+                </button>
+            }
+            @Html.ActionLink("Unfollow szdc", "UnfollowSzdc")
+        }
+        else
+        {
+            using (Html.BeginForm("Login", "Account"))
+            {
+                @Html.AntiForgeryToken()
+                <button type="submit">
+                    Login
+                </button>
+            }
+        }
+
+    </div>
+</body>
+</html>
